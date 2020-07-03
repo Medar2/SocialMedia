@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Api.Responses;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
@@ -28,9 +29,12 @@ namespace SocialMedia.Api.Controllers
         {
             //var posts = new PostRepository().GetPosts();}
             var posts = await _postRepository.GetPosts();
+            //var postDto = _mapper.Map<PostDto>(posts);
+
+
             //AutoMapper
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
-
+            var response = new ApiResponse<IEnumerable<PostDto>>(postsDto);
             //var postsDto = posts.Select(x => new PostDto
             //{
             //    Postid = x.Postid,
@@ -39,15 +43,16 @@ namespace SocialMedia.Api.Controllers
             //    UserId = x.UserId
 
             //});
-            return Ok(postsDto);
-        
+            return Ok(response);
+
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPosts(int id)
         {
-            
+
             var post = await _postRepository.GetPosts(id);
-            var postsDto = _mapper.Map<PostDto>(post);
+            var postsDto = _mapper.Map<PostDto>(post);            
+            var response = new ApiResponse<PostDto>(postsDto);
             //var postsDto = new PostDto
             //{
             //    Postid = post.Postid,
@@ -56,7 +61,7 @@ namespace SocialMedia.Api.Controllers
             //    UserId = post.UserId
 
             //};
-            return Ok(postsDto);
+            return Ok(response);
 
         }
         [HttpPost]
@@ -71,17 +76,38 @@ namespace SocialMedia.Api.Controllers
             //    UserId = postDto.UserId
             //};
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
             //AutoMapper
             var post = _mapper.Map<Post>(postDto);
 
             await _postRepository.InsertPost(post);
-            return Ok(postDto);
+            postDto = _mapper.Map<PostDto>(post);
+            var response = new ApiResponse<PostDto>(postDto);
 
+            return Ok(response);
+        }
+        [HttpPut]
+        public async Task<IActionResult> Put(int id, PostDto postDto)
+        {
+
+            //AutoMapper
+            var post = _mapper.Map<Post>(postDto);
+
+            post.UserId = id;
+            var result = await _postRepository.UpdatePost(post);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
+
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _postRepository.DeletePost(id);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
         }
     }
 }
