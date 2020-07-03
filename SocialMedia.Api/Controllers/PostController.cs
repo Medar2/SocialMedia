@@ -4,12 +4,14 @@ using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] //recomendado para API
+
     public class PostController : ControllerBase
     {
         private readonly IPostRepository _postRepository;
@@ -69,12 +71,16 @@ namespace SocialMedia.Api.Controllers
             //    UserId = postDto.UserId
             //};
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             //AutoMapper
             var post = _mapper.Map<Post>(postDto);
 
             await _postRepository.InsertPost(post);
-            return Ok(post);
+            return Ok(postDto);
 
         }
     }
