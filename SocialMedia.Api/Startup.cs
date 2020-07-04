@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Data;
 using SocialMedia.Infrastructure.Filters;
 using SocialMedia.Infrastructure.Repositories;
@@ -46,6 +47,8 @@ namespace SocialMedia.Api
             //--------------------------
             //services.AddTransient<IPostRepository, PostMongoRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IPostServices, PostServices>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddMvc(options =>
             {

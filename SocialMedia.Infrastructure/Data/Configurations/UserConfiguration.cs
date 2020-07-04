@@ -19,7 +19,7 @@ namespace SocialMedia.Infrastructure.Data.Configurations
             .HasColumnName("IdUsuario");
 
             builder.Property(e => e.Lastname)
-            .HasColumnName("Apellido")
+            .HasColumnName("Apellidos")
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -37,7 +37,7 @@ namespace SocialMedia.Infrastructure.Data.Configurations
             .HasColumnName("Activo");
 
             builder.Property(e => e.FirstName)
-            .HasColumnName("Nombre")
+            .HasColumnName("Nombres")
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
