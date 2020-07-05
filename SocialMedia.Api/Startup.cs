@@ -29,7 +29,10 @@ namespace SocialMedia.Api
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //.AddNewtonsoftJson Ignora referencias Circulares
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers(options => 
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            }).AddNewtonsoftJson(options =>
                {
                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                }).ConfigureApiBehaviorOptions (options => {
@@ -49,7 +52,7 @@ namespace SocialMedia.Api
             //services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPostServices, PostServices>();
             //services.AddTransient<IUserRepository, UserRepository>();
-            services.AddScoped(typeof(IRespository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc(options =>

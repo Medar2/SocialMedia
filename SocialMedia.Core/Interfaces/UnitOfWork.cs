@@ -6,10 +6,14 @@ namespace SocialMedia.Core.Interfaces
 {
     public interface IUnitOfWork :IDisposable
     {
-        IRespository<Post> PostRepository { get; }
-        IRespository<User> UserRepository { get; }
+        //Eliminado por la implementacion en UnitOfWork de la nueva extencion para PostRepository
+        //IRepository<Post> PostRepository { get; }
+        IPostRepository PostRepository { get; } //Nueva Implementacion despues de la extensión
 
-        IRespository<Comment> CommentRepository { get; }
+
+        IRepository<User> UserRepository { get; }
+
+        IRepository<Comment> CommentRepository { get; }
         void SaveChanges();
 
         Task SaveChangesAsync();

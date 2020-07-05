@@ -10,9 +10,14 @@ namespace SocialMedia.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IRespository<Post> _postRepository;
-        private readonly IRespository<User> _userRepository;
-        private readonly IRespository<Comment> _CommentRepository;
+        //Eliminamos este, porque se creo una extension de PostRepository en PostRepository 
+        //con un metodo mas (Buscar Post por id de usuario)
+        //private readonly IRepository<Post> _postRepository;
+        //Luego de la extension, si se hace uso del la nueva Interface
+        private readonly IPostRepository _postRepository; //Nueva Implementacion extendida
+
+        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Comment> _CommentRepository;
 
         private readonly SocialMediaContext _context;
 
@@ -20,11 +25,14 @@ namespace SocialMedia.Infrastructure.Repositories
         {
             _context = context;
         }
-        public IRespository<Post> PostRepository => _postRepository ?? new BaseRepository<Post>(_context);
+        //Se Elimina para agregar la nueva imprementacion extendida
+        //public IRepository<Post> PostRepository => _postRepository ?? new BaseRepository<Post>(_context);
+        //Luego de esto ir a IUnitOfWork y reemplazar la firma para PostRepository
+        public IPostRepository PostRepository => _postRepository ?? new PostRepository(_context); //nuevo approach
 
-        public IRespository<User> UserRepository => new BaseRepository<User>(_context);
+        public IRepository<User> UserRepository => _userRepository ?? new BaseRepository<User>(_context);
 
-        public IRespository<Comment> CommentRepository => new BaseRepository<Comment>(_context);
+        public IRepository<Comment> CommentRepository => _CommentRepository ?? new BaseRepository<Comment>(_context);
 
         public void Dispose()
         {

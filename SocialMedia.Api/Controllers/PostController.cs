@@ -28,10 +28,10 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public IActionResult GetPosts()
         {
             //var posts = new PostRepository().GetPosts();}
-            var posts = await postServices.GetPosts();
+            var posts = postServices.GetPosts();
             //var postDto = _mapper.Map<PostDto>(posts);
 
 
