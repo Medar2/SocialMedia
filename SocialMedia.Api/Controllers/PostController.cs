@@ -99,7 +99,7 @@ namespace SocialMedia.Api.Controllers
             //AutoMapper
             var post = _mapper.Map<Post>(postDto);
 
-            post.id = id;
+            post.Id = id;
             var result = await postServices.UpdatePost(post);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
