@@ -4,8 +4,8 @@ using SocialMedia.Api.Responses;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Core.QueryFilters;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
@@ -28,10 +28,10 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPosts()
+        public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
         {
             //var posts = new PostRepository().GetPosts();}
-            var posts = postServices.GetPosts();
+            var posts = postServices.GetPosts(filters);
             //var postDto = _mapper.Map<PostDto>(posts);
 
 
