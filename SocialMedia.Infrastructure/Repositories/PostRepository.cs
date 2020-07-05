@@ -34,7 +34,7 @@ namespace SocialMedia.Infrastructure.Repositories
         public async Task<Post> GetPosts(int id)
         {
 
-            var posts = await socialMediaContext.Posts.FirstOrDefaultAsync(x => x.Postid == id);
+            var posts = await socialMediaContext.Posts.FirstOrDefaultAsync(x => x.id == id);
             return posts;
         }
         public async Task InsertPost(Post post)
@@ -44,7 +44,7 @@ namespace SocialMedia.Infrastructure.Repositories
         }
         public async Task<bool>UpdatePost(Post post)
         {
-            var currentPost = await GetPosts(post.Postid);
+            var currentPost = await GetPosts(post.id);
             currentPost.Date = post.Date;
             currentPost.Description = post.Description;
             currentPost.Image = post.Image;

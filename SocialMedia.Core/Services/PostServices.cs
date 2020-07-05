@@ -10,10 +10,17 @@ namespace SocialMedia.Core.Services
 {
     public class PostServices : IPostServices
     {
-        private readonly IPostRepository postRepository;
-        private readonly IUserRepository _userRepository;
+        //private readonly IPostRepository postRepository;
+        //private readonly IUserRepository _userRepository;
 
-        public PostServices(IPostRepository postRepository,IUserRepository userRepository)
+        //public PostServices(IPostRepository postRepository, IUserRepository userRepository)
+        //{
+        //    this.postRepository = postRepository;
+        //    this._userRepository = userRepository;
+        //}
+        private readonly IRespository<Post> postRepository;
+        private readonly IRespository<User> _userRepository;
+        public PostServices(IRespository<Post> postRepository, IRespository<User> userRepository)
         {
             this.postRepository = postRepository;
             this._userRepository = userRepository;
@@ -21,22 +28,23 @@ namespace SocialMedia.Core.Services
 
         public async Task<bool> DeletePost(int id)
         {
-            return await postRepository.DeletePost(id);
+            await postRepository.Delete(id);
+            return true;
         }
 
         public async Task<IEnumerable<Post>> GetPosts()
         {
-            return await postRepository.GetPosts();
+            return await postRepository.GetAll();
         }
 
         public async Task<Post> GetPosts(int id)
         {
-            return await postRepository.GetPosts(id);
+            return await postRepository.GetById(id);
         }
 
         public async Task InsertPost(Post post)
         {
-            var user = await _userRepository.GetUser(post.UserId);
+            var user = await _userRepository.GetById(post.UserId);
             if (user == null)
             {
                 throw new Exception("User doesn´t exist");
@@ -47,12 +55,13 @@ namespace SocialMedia.Core.Services
                 throw new Exception("The commnen conect not allowed");
             }
 
-            await postRepository.InsertPost(post);
+            await postRepository.Add(post);
         }
 
         public async Task<bool> UpdatePost(Post post)
         {
-            return await postRepository.UpdatePost(post);
+             await postRepository.Update(post);
+            return true;
         }
     }
 }
