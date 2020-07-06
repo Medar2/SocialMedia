@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SocialMedia.Api.Responses;
+using SocialMedia.Core.CustomEntities;
 using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
@@ -41,6 +43,12 @@ namespace SocialMedia.Api.Controllers
             //AutoMapper
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
             var response = new ApiResponse<IEnumerable<PostDto>>(postsDto);
+
+            ////Implementar Paginacion ojo ** se dejo igual porque el PagedList hereda de un list
+            //var postsDto = _mapper.Map<PagedList<PostDto>>(posts);
+            //var response = new ApiResponse<PagedList<PostDto>>(postsDto);
+            //-------------------------------------------------------------------------------------
+
             //var postsDto = posts.Select(x => new PostDto
             //{
             //    Postid = x.Postid,
@@ -49,6 +57,16 @@ namespace SocialMedia.Api.Controllers
             //    UserId = x.UserId
 
             //});
+            var metadata = new
+            {
+                posts.TotalPages,
+                posts.PageSize,
+                posts.TotalCount,
+                posts.CurrentPage,
+                posts.HasNextPage,
+                posts.HasPreviousPage
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(response);
 
         }
