@@ -46,6 +46,9 @@ namespace SocialMedia.Core.Services
         //public IEnumerable<Post> GetPosts(PostQueryFilter filters)
         public PagedList<Post> GetPosts(PostQueryFilter filters)
         {
+            filters.PageNumber = filters.PageNumber == 0 ? 1 : filters.PageNumber;
+            filters.PageSize = filters.PageSize == 0 ? 20 : filters.PageSize;
+
             var posts = _unitOfWork.PostRepository.GetAll();
             if (filters.UserId != null)
             {
