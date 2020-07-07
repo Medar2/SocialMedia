@@ -1,4 +1,5 @@
-﻿using SocialMedia.Core.CustomEntities;
+﻿using Microsoft.Extensions.Options;
+using SocialMedia.Core.CustomEntities;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Exceptions;
 using SocialMedia.Core.Interfaces;
@@ -16,6 +17,7 @@ namespace SocialMedia.Core.Services
     public class PostServices : IPostServices
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationOptions _paginationOptions;
 
         //private readonly IPostRepository postRepository;
         //private readonly IUserRepository _userRepository;
@@ -33,9 +35,10 @@ namespace SocialMedia.Core.Services
         //    this._userRepository = userRepository;
         //}
 
-        public PostServices(IUnitOfWork unitOfWork)
+        public PostServices(IUnitOfWork unitOfWork, IOptions<PaginationOptions> options)
         {
             this._unitOfWork = unitOfWork;
+            this._paginationOptions = options.Value; ;
         }
         public async Task<bool> DeletePost(int id)
         {
@@ -46,8 +49,8 @@ namespace SocialMedia.Core.Services
         //public IEnumerable<Post> GetPosts(PostQueryFilter filters)
         public PagedList<Post> GetPosts(PostQueryFilter filters)
         {
-            filters.PageNumber = filters.PageNumber == 0 ? 1 : filters.PageNumber;
-            filters.PageSize = filters.PageSize == 0 ? 20 : filters.PageSize;
+            filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
+            filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
 
             var posts = _unitOfWork.PostRepository.GetAll();
             if (filters.UserId != null)

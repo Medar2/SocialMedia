@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SocialMedia.Core.CustomEntities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Data;
@@ -55,6 +56,9 @@ namespace SocialMedia.Api
                 var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriService(absoluteUri);            
             });
+
+            //Cargar valores del AppSetting
+            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
 
             
             //--------------------------
