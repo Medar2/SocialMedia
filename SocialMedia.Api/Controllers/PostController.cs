@@ -7,6 +7,7 @@ using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.QueryFilters;
+using SocialMedia.Infrastructure.Interfaces;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -22,15 +23,17 @@ namespace SocialMedia.Api.Controllers
 
         //private readonly IPostRepository _postRepository;
         private readonly IMapper _mapper;
+        private readonly IUriService _uriService;
 
-        public PostController(IPostServices postServices, IMapper mapper)
+        public PostController(IPostServices postServices, IMapper mapper, IUriService uriService)
         {
             this.postServices = postServices;
             //this._postRepository = postRepository;
             this._mapper = mapper;
+            this._uriService = uriService;
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetPosts))]
         [ProducesResponseType((int)HttpStatusCode.OK)] //Tipos de Respuestas
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
@@ -50,8 +53,10 @@ namespace SocialMedia.Api.Controllers
                 TotalCount = posts.TotalCount,
                 CurrentPage = posts.CurrentPage,
                 HasNextPage = posts.HasNextPage,
-                HasPreviuosPage = posts.HasPreviousPage
-
+                HasPreviuosPage = posts.HasPreviousPage,
+                //NexPageUrl = _uriService.GetPostPaginationUri(filters,"/api/Post").ToString()
+                NexPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetPosts))).ToString(),
+                PreviuosPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetPosts))).ToString()
             };
 
             var response = new ApiResponse<IEnumerable<PostDto>>(postsDto)
