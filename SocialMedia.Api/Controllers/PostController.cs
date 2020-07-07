@@ -42,7 +42,22 @@ namespace SocialMedia.Api.Controllers
 
             //AutoMapper
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
-            var response = new ApiResponse<IEnumerable<PostDto>>(postsDto);
+
+            var metadata = new Metadata
+            {
+                TotalPage = posts.TotalPages,
+                PageSize = posts.PageSize,
+                TotalCount = posts.TotalCount,
+                CurrentPage = posts.CurrentPage,
+                HasNextPage = posts.HasNextPage,
+                HasPreviuosPage = posts.HasPreviousPage
+
+            };
+
+            var response = new ApiResponse<IEnumerable<PostDto>>(postsDto)
+            {
+                Meta = metadata
+            };
 
             ////Implementar Paginacion ojo ** se dejo igual porque el PagedList hereda de un list
             //var postsDto = _mapper.Map<PagedList<PostDto>>(posts);
@@ -57,16 +72,17 @@ namespace SocialMedia.Api.Controllers
             //    UserId = x.UserId
 
             //});
-            var metadata = new
-            {
-                posts.TotalPages,
-                posts.PageSize,
-                posts.TotalCount,
-                posts.CurrentPage,
-                posts.HasNextPage,
-                posts.HasPreviousPage
-            };
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            //var metadata = new
+            //{
+            //    posts.TotalPages,
+            //    posts.PageSize,
+            //    posts.TotalCount,
+            //    posts.CurrentPage,
+            //    posts.HasNextPage,
+            //    posts.HasPreviousPage
+            //};
+          
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata)); ///primera opcion de paginacion
             return Ok(response);
 
         }
