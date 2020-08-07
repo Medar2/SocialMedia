@@ -14,8 +14,11 @@ using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController] //recomendado para API
+    
+    //<NoWarn>$(NoWarn):1591</NoWarn> in .csprj para omitir los Warning:
 
     public class PostController : ControllerBase
     {
@@ -32,9 +35,19 @@ namespace SocialMedia.Api.Controllers
             this._mapper = mapper;
             this._uriService = uriService;
         }
+        //TODO: para poder ver los summary en la documentacion ir a proyecto.csproj y agregar:
+          //<PropertyGroup>
+          //  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+          //</PropertyGroup>
 
+
+        /// <summary>
+        /// Utilizado para traer todos los Post
+        /// </summary>
+        /// <param name="filters">Filters to apply</param>
+        /// <returns></returns>
         [HttpGet(Name = nameof(GetPosts))]
-        [ProducesResponseType((int)HttpStatusCode.OK)] //Tipos de Respuestas
+        [ProducesResponseType((int)HttpStatusCode.OK,Type = typeof(ApiResponse<IEnumerable<PostDto>>))] //Tipos de Respuestas
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
         {

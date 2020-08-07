@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SocialMedia.Core.CustomEntities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Services;
@@ -16,6 +17,8 @@ using SocialMedia.Infrastructure.Interfaces;
 using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Infrastructure.Services;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace SocialMedia.Api
 {
@@ -71,6 +74,15 @@ namespace SocialMedia.Api
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+            //TODO : Primer paso para la documentacion            
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "Social Media", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                doc.IncludeXmlComments(xmlPath);
+            });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
@@ -90,6 +102,22 @@ namespace SocialMedia.Api
             }
 
             app.UseHttpsRedirection();
+
+            //TODO : Segunto paso para definir la documentacion
+            //segundo paso para generar el json: ir a la url y escribir: ttps://localhost:44327/swagger/v1/swagger.json
+            //de esta forma se genera el json de la documentacion, luego guardar archivo
+            ////luego abrirlo desde el editor web de swagger editor editor.swagger.io
+            app.UseSwagger();
+
+            //Generar Interce de usuario desde el json
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json","Social Media API V1" );
+                options.RoutePrefix = String.Empty; //para arrancar desde la cumentacion
+                //Para ver el resultado, escribir solo swagger desde la ruta principal
+                // y se visualizara la documentacion
+
+            });
 
             app.UseRouting();
 
