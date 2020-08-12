@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialMedia.Api.Responses;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController] //recomendado para API
@@ -49,6 +51,7 @@ namespace SocialMedia.Api.Controllers
         [HttpGet(Name = nameof(GetPosts))]
         [ProducesResponseType((int)HttpStatusCode.OK,Type = typeof(ApiResponse<IEnumerable<PostDto>>))] //Tipos de Respuestas
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
         {
             //var posts = new PostRepository().GetPosts();}
