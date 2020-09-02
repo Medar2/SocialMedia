@@ -74,6 +74,7 @@ namespace SocialMedia.Api
             //services.AddTransient<IPostRepository, PostMongoRepository>();
             //services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPostServices, PostServices>();
+            services.AddTransient<ISecurityService, SecurityService>();
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();

@@ -1,9 +1,6 @@
 ﻿using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SocialMedia.Infrastructure.Repositories
@@ -18,6 +15,7 @@ namespace SocialMedia.Infrastructure.Repositories
 
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Comment> _CommentRepository;
+        private readonly ISecurityRepository _securityRepository;
 
         private readonly SocialMediaContext _context;
 
@@ -29,6 +27,7 @@ namespace SocialMedia.Infrastructure.Repositories
         //public IRepository<Post> PostRepository => _postRepository ?? new BaseRepository<Post>(_context);
         //Luego de esto ir a IUnitOfWork y reemplazar la firma para PostRepository
         public IPostRepository PostRepository => _postRepository ?? new PostRepository(_context); //nuevo approach
+        public ISecurityRepository SecurityRepository => _securityRepository ?? new SecurityRepository(_context);
 
         public IRepository<User> UserRepository => _userRepository ?? new BaseRepository<User>(_context);
 

@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 using SocialMedia.Core.Entities;
 using SocialMedia.Infrastructure.Data.Configurations;
+using System.Reflection;
 
 namespace SocialMedia.Infrastructure.Data
 {
@@ -20,15 +19,17 @@ namespace SocialMedia.Infrastructure.Data
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Security> Securities { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-////            if (!optionsBuilder.IsConfigured)
-////            {
-////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-////                optionsBuilder.UseSqlServer("Server=DEVISS-03-JC\\SQLXP2017;Database=SocialMedia;User Id=administrador;Password=DevSolutions3;MultipleActiveResultSets=true");
-////            }
-//        }
+
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        ////            if (!optionsBuilder.IsConfigured)
+        ////            {
+        ////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        ////                optionsBuilder.UseSqlServer("Server=DEVISS-03-JC\\SQLXP2017;Database=SocialMedia;User Id=administrador;Password=DevSolutions3;MultipleActiveResultSets=true");
+        ////            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -149,11 +150,12 @@ namespace SocialMedia.Infrastructure.Data
             //OnModelCreatingPartial(modelBuilder);
             #endregion
 
-            modelBuilder.ApplyConfiguration(new PostConfigurations());
+            //modelBuilder.ApplyConfiguration(new PostConfigurations());
 
-           
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
-            
+
+            //modelBuilder.ApplyConfiguration(new UserConfiguration());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
