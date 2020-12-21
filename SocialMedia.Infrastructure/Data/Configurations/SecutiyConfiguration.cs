@@ -18,7 +18,7 @@ namespace SocialMedia.Infrastructure.Data.Configurations
             .HasColumnName("IdSeguridad");
 
             builder.Property(e => e.User)
-            .HasColumnName("Usuairo")
+            .HasColumnName("Usuario")
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -26,13 +26,13 @@ namespace SocialMedia.Infrastructure.Data.Configurations
             builder.Property(e => e.UserName)
             .HasColumnName("NombreUsuario")
                 .IsRequired()
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
 
             builder.Property(e => e.Password)
            .HasColumnName("Contasena")
                .IsRequired()
-               .HasMaxLength(50)
+               .HasMaxLength(200)
                .IsUnicode(false);
 
             builder.Property(e => e.Role)

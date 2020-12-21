@@ -1,10 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Infrastructure.Interfaces;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,11 +18,13 @@ namespace SocialMedia.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ISecurityService _securityService;
+        private readonly IPasswordService _passwordService;
 
-        public TokenController(IConfiguration Configuration,ISecurityService securityService)
+        public TokenController(IConfiguration Configuration,ISecurityService securityService, IPasswordService passwordService)
         {
             _securityService = securityService;
             _configuration = Configuration;
+            _passwordService = passwordService;
         }
         [HttpPost]
         public async Task<IActionResult> Authentication(UserLogin login)
@@ -39,11 +40,13 @@ namespace SocialMedia.Api.Controllers
             return NotFound();
 
         }
+        //tupla
         private async Task<(bool,Security)> IsValidUser(UserLogin login)
         {
             var user = await _securityService.GetLoginByCredentials(login);
+            var isValid = _passwordService.Check(user.Password, login.Password);
 
-            return (user != null, user);
+            return (isValid, user);
         }
         private string GenerateToken(Security security)
         {
@@ -70,7 +73,7 @@ namespace SocialMedia.Api.Controllers
                 _configuration["Authentication:Audience"],
                 claims,
                 DateTime.Now,
-                DateTime.UtcNow.AddMinutes(2)
+                DateTime.UtcNow.AddMinutes(10)
 
             );
 

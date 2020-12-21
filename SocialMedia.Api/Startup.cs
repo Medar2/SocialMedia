@@ -17,6 +17,7 @@ using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Data;
 using SocialMedia.Infrastructure.Filters;
 using SocialMedia.Infrastructure.Interfaces;
+using SocialMedia.Infrastructure.Options;
 using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Infrastructure.Services;
 using System;
@@ -55,19 +56,13 @@ namespace SocialMedia.Api
                options.UseSqlServer(
                    Configuration.GetConnectionString("DevConnection")));
 
-            //Para sacar el UrlBase
-            services.AddSingleton<IUriService>(provider =>
-            {
-                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
-                var request = accesor.HttpContext.Request;
-                var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
-                return new UriService(absoluteUri);            
-            });
+           
 
             //Cargar valores del AppSetting
             services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
+            services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
 
-            
+
             //--------------------------
             //Dependencia
             //--------------------------
@@ -78,6 +73,16 @@ namespace SocialMedia.Api
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IPasswordService, PasswordServices>();
+
+            //Para sacar el UrlBase
+            services.AddSingleton<IUriService>(provider =>
+            {
+                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accesor.HttpContext.Request;
+                var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(absoluteUri);
+            });
 
             //TODO : Primer paso para la documentacion            
             services.AddSwaggerGen(doc =>
@@ -141,7 +146,7 @@ namespace SocialMedia.Api
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("../swagger/v1/swagger.json","Social Media API V1" );
-                options.RoutePrefix = String.Empty; //para arrancar desde la cumentacion
+                //options.RoutePrefix = String.Empty; //para arrancar desde la cumentacion
                 //Para ver el resultado, escribir solo swagger desde la ruta principal
                 // y se visualizara la documentacion
 
