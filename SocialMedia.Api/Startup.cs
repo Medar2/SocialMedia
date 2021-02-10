@@ -27,8 +27,15 @@ using System.Text;
 
 namespace SocialMedia.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -51,6 +58,7 @@ namespace SocialMedia.Api
                }).ConfigureApiBehaviorOptions (options => {
                    //options.SuppressModelStateInvalidFilter = true; //Para suprimir validaciones de Apicontroller
                });
+            var sql = Configuration.GetConnectionString("DevConnection");
 
             services.AddDbContext<SocialMediaContext>(options =>
                options.UseSqlServer(

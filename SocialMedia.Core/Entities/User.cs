@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SocialMedia.Core.Entities
 {
+    [Table("Usuario")]
     public partial class User : BaseEntity
     {
         public User()

@@ -14,7 +14,7 @@ namespace SocialMedia.Api.Controllers
     /// <summary>
     /// 
     /// </summary>
-    //[Authorize(Roles =nameof(RoleType.Administrator))]
+    [Authorize(Roles = nameof(RoleType.Administrator))]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController] //recomendado para API 
