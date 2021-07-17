@@ -43,6 +43,7 @@ namespace SocialMedia.Core.Services
         public async Task<bool> DeletePost(int id)
         {
             await _unitOfWork.PostRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
 
@@ -79,7 +80,7 @@ namespace SocialMedia.Core.Services
         }
 
         public async Task InsertPost(Post post)
-        {
+        {   
             var user = await _unitOfWork.UserRepository.GetById(post.UserId);
             if (user == null)
             {
@@ -108,7 +109,13 @@ namespace SocialMedia.Core.Services
 
         public async Task<bool> UpdatePost(Post post)
         {
-             _unitOfWork.PostRepository.Update(post);
+
+            //Si Actualizamos solo las columnas que queremos
+            var existPost = await _unitOfWork.PostRepository.GetById(post.Id);
+            existPost.Image = post.Image;
+            existPost.Description = post.Description;
+
+             _unitOfWork.PostRepository.Update(existPost);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

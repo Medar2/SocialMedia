@@ -10,10 +10,16 @@ namespace SocialMedia.Infrastructure.Validators
         {
             RuleFor(post => post.Description)
                 .NotNull()
-                .Length(5, 500);
+                .WithMessage("La Descripcion no puede ser nula");
+
+            RuleFor(post => post.Description)
+                .Length(5, 500)
+                .WithMessage("La Descripcion no puede ser nula");
+
             RuleFor(post => post.Date)
                 .NotNull()
-                .LessThan(DateTime.Now);
+                .LessThan(DateTime.Now)
+                .WithMessage("La fecha no puede ser nula");
         }
     }
 }
